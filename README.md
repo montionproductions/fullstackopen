@@ -1,2 +1,2 @@
 # fullstackopen
-Repositorio de ejercision del curso de FullstackOpen
+Repositorio de ejercicios del curso de FullstackOpen
