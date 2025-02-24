@@ -3,10 +3,15 @@ const Persons = ({persons, onDeleteHandle}) => {
     return (
         <>
             {persons.map(person => (
-                <div key={person.id}>
-                    <p>{person.name} {person.number}</p>
-                    <button onClick={() => onDeleteHandle(person.id)}>delete</button>  
-                </div>
+                <table key={person.id}>
+                    <tbody>
+                        <tr>
+                            <td>{person.name}</td>
+                            <td>{person.number}</td>
+                            <td><button onClick={() => onDeleteHandle(person.id)}>delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             ))} 
         </>
     )

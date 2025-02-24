@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSerch, setNewSerch] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const hook = () => {
     //console.log('effect')
@@ -49,6 +50,12 @@ const App = () => {
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName('')
+        setErrorMessage(
+          `Note '${phoneObject.name}' was already added to server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -68,12 +75,24 @@ const App = () => {
     setValueCall(event.target.value)
   }
 
+  const Notification = ({ message }) => {
+
+    if (message === "") {
+      return
+    }
+  
+    return (
+      <p className="success">{message}</p>
+    )
+  }
+
   return (
     <div>
       <h2>Phonebook </h2>
       <Filter value={newSerch} setValue={setNewSerch} handleInputChange={handleInputChange} persons={persons} /> 
 
       <h3>Add a new</h3>
+      <Notification message={errorMessage} />
       <PersonForm 
         addPerson={addPhone} 
         newName={newName} 
