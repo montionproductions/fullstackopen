@@ -2,7 +2,7 @@ const Filter = ({value, setValue, handleInputChange, persons}) => {
     return (
         <>
         <div>
-          Searc: <input 
+          Serch: <input 
             value={value}
             onChange={(event) => handleInputChange({event, setValueCall: setValue})}
           /></div>
