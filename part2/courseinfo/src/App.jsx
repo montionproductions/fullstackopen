@@ -2,10 +2,14 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+  ])
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
+  const [newSerch, setNewSerch] = useState('')
 
 
   const addPhone = (event) => {
@@ -31,6 +35,18 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <div>
+          Searc: <input 
+            value={newSerch}
+            onChange={(event) => handleInputChange({event, setValueCall: setNewSerch})}
+          /></div>
+          {persons.filter(person => person.name.toLowerCase() === newSerch.toLowerCase()).length > 0 ? (
+            <p>Result: {persons.find(person => person.name.toLowerCase() === newSerch.toLowerCase()).number}</p>
+          ) : (
+            <p>No results found</p>
+          )}
+      
+      <h1>Add a new</h1>
       <form onSubmit={addPhone}>
         <div>
           name: <input 
