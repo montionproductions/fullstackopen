@@ -5,12 +5,13 @@ const App = () => {
     { name: 'Arto Hellas' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newPhone, setNewPhone] = useState('')
 
 
   const addPhone = (event) => {
     event.preventDefault()
     const phoneObject = {
-      number: '000000000000',
+      number: newPhone,
       name: newName,
       id: persons.length + 1
     }
@@ -23,8 +24,8 @@ const App = () => {
     setNewName('')
   }
 
-  const handleInputTextChange = (event) => {
-    setNewName(event.target.value)
+  const handleInputChange = ({event, setValueCall}) => {
+    setValueCall(event.target.value)
   }
 
   return (
@@ -34,7 +35,12 @@ const App = () => {
         <div>
           name: <input 
             value={newName}
-            onChange={handleInputTextChange}
+            onChange={(event) => handleInputChange({event, setValueCall: setNewName})}
+          /></div>
+        <div>
+          number: <input 
+            value={newPhone}
+            onChange={(event) => handleInputChange({event, setValueCall: setNewPhone})}
           />
         </div>
         <div>
