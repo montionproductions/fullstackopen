@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -34,39 +37,19 @@ const App = () => {
 
   return (
     <div>
-      <h1>Phonebook</h1>
-      <div>
-          Searc: <input 
-            value={newSerch}
-            onChange={(event) => handleInputChange({event, setValueCall: setNewSerch})}
-          /></div>
-          {persons.filter(person => person.name.toLowerCase() === newSerch.toLowerCase()).length > 0 ? (
-            <p>Result: {persons.find(person => person.name.toLowerCase() === newSerch.toLowerCase()).number}</p>
-          ) : (
-            <p>No results found</p>
-          )}
+      <h2>Phonebook</h2>
+      <Filter value={newSerch} setValue={setNewSerch} handleInputChange={handleInputChange} persons={persons} /> 
+
+      <h3>Add a new</h3>
+      <PersonForm 
+        addPerson={addPhone} 
+        newName={newName} 
+        handleNameChange={(event) => handleInputChange({event, setValueCall: setNewName})} 
+        newNumber={newPhone} 
+        handleNumberChange={(event) => handleInputChange({event, setValueCall: setNewPhone})} />
       
-      <h1>Add a new</h1>
-      <form onSubmit={addPhone}>
-        <div>
-          name: <input 
-            value={newName}
-            onChange={(event) => handleInputChange({event, setValueCall: setNewName})}
-          /></div>
-        <div>
-          number: <input 
-            value={newPhone}
-            onChange={(event) => handleInputChange({event, setValueCall: setNewPhone})}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {persons.map(person => 
-        <p key={person.name}>{person.name}</p>
-      )}
+      <h3>Numbers</h3>
+      <Persons persons={persons} />
     </div>
   )
 }
