@@ -13,8 +13,17 @@ const update = (id, newObject) => {
   return axios.put(`${baseUrl}/${id}`, newObject)
 }
 
-export default { 
-  getAll: getAll, 
-  create: create, 
-  update: update 
+const deletePerson = (id) => {
+    console.log(`Intentando eliminar el ID: ${id}`);
+    console.log(`URL generada: ${baseUrl}/${id}`);
+
+    return axios.delete(`${baseUrl}/${id}`)
+        .then(response => {
+            console.log('Respuesta del servidor:', response);
+        })
+        .catch(error => {
+            console.error('Error al eliminar:', error.response ? error.response.data : error);
+        });
 }
+
+export default { getAll, create, update, deletePerson}

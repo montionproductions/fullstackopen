@@ -42,6 +42,18 @@ const App = () => {
       })
   }
 
+  const deletePhone = (id) => {
+    const person = persons.find(person => person.id === id)
+    if(window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .deletePerson(id)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== id))
+          console.log(response)
+        })
+    }
+  }
+
   const handleInputChange = ({event, setValueCall}) => {
     setValueCall(event.target.value)
   }
@@ -60,7 +72,7 @@ const App = () => {
         handleNumberChange={(event) => handleInputChange({event, setValueCall: setNewPhone})} />
       
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      <Persons persons={persons} onDeleteHandle={deletePhone}/>
     </div>
   )
 }
