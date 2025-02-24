@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Note from './components/Note'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -16,6 +15,10 @@ const App = () => {
       id: persons.length + 1
     }
   
+    if(persons.find(person => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
     setPersons(persons.concat(phoneObject))
     setNewName('')
   }
