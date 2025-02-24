@@ -18,8 +18,22 @@ const App = () => {
 
   const handleVote = () => currentVote === 0 ? setVote({...vote, [selected]: 1}) : setVote({...vote, [selected]: currentVote + 1})  
 
+  const getMostVoted = () => {
+    let mostVotedIndex = 0
+    let highestVote = 0
+
+    for(const key in vote) {
+      if(vote[key] > highestVote) {
+        highestVote = vote[key]
+        mostVotedIndex = key
+      }
+    } 
+    return mostVotedIndex
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <p>has {currentVote} votes</p>
       <div>
@@ -29,8 +43,9 @@ const App = () => {
         <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>
           next anecdote
         </button>
-
       </div>
+      <h1>Anecdote with most votes</h1>
+      {getMostVoted() === selected ? anecdotes[selected] : anecdotes[getMostVoted()]}
     </div>
   )
 }
