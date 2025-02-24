@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSerch, setNewSerch] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
   const hook = () => {
@@ -38,9 +39,20 @@ const App = () => {
           .id, phoneObject)
           .then(response => {
             setPersons(persons.map(person => person.id !== response.data.id ? person : response.data))
+            setSuccessMessage(`${phoneObject.name}'was updated on server`)  
+            setTimeout(() => {
+              setSuccessMessage("")
+            }, 5000)
             setNewName('')
             setNewPhone('')
-          })
+          }).catch(error => {
+            console.log(error.response.data)
+            setErrorMessage(`Information of '${phoneObject.name}' has already been removed from server`)
+            setTimeout(() => {
+              setErrorMessage("")
+            }, 5000)
+          }
+        )
       }
       return
     }
@@ -50,12 +62,10 @@ const App = () => {
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName('')
-        setErrorMessage(
-          `Note '${phoneObject.name}' was already added to server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        setSuccessMessage(`Added '${phoneObject.name}' to server`)
+            setTimeout(() => {
+              setSuccessMessage("")
+            }, 5000)
       })
   }
 
@@ -75,7 +85,7 @@ const App = () => {
     setValueCall(event.target.value)
   }
 
-  const Notification = ({ message }) => {
+  const NotificationSuccess = ({ message }) => {
 
     if (message === "") {
       return
@@ -86,13 +96,25 @@ const App = () => {
     )
   }
 
+  const NotificationError = ({ message }) => {
+
+    if (message === "") {
+      return
+    }
+  
+    return (
+      <p className="error">{message}</p>
+    )
+  }
+
   return (
     <div>
       <h2>Phonebook </h2>
       <Filter value={newSerch} setValue={setNewSerch} handleInputChange={handleInputChange} persons={persons} /> 
 
       <h3>Add a new</h3>
-      <Notification message={errorMessage} />
+      <NotificationSuccess message={successMessage} />
+      <NotificationError message={errorMessage} />
       <PersonForm 
         addPerson={addPhone} 
         newName={newName} 
