@@ -30,6 +30,19 @@ app.get('/api/persons/', (request, response) => {
   response.json(phonebook)
 })
 
+app.get('/api/persons/info', (request, response) => {
+    const formattedDate = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long' });
+    const timeStamp = new Date().toString();
+
+    response.send(`
+        <div>
+            <h2>Phonebook has info for 2 people</h2>
+            <h2>${timeStamp}</h2>
+        </div>
+    `);
+});
+
+
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     console.log(id)
