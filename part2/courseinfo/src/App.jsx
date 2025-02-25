@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect} from 'react'
 
 /*import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
@@ -6,6 +6,7 @@ import Persons from './components/Persons'
 
 import personService from './services/persons'*/
 import countriesServices from './services/countries'
+import openWeatherMap from './services/openWeatherMap'
 
 const CountryRow = ({country, handleOnClick}) => {
   return (
@@ -15,19 +16,41 @@ const CountryRow = ({country, handleOnClick}) => {
   </div>) 
 }
 
-const ContryInfo = ({country}) => {
+const CapitalInfo = ({country}) => {
   return (
     <div>
-      <h1>{country.name.common}</h1>
-      <p>Capital: {country.capital}</p>
-      <p>Population: {country.population}</p>
-      <h2>Languages</h2>
-      <ul>
-        {Object.values(country.languages).map(language => 
-          <li key={language}>{language}</li>
-        )}
-      </ul>
-      <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" height="100" />
+        <h1>{country.name.common}</h1>
+        <p>Capital: {country.capital}</p>
+        <p>Population: {country.population}</p>
+        <h2>Languages</h2>
+        <ul>
+          {Object.values(country.languages).map(language => 
+            <li key={language}>{language}</li>
+          )}
+        </ul>
+        <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" height="100" />
+        <p>Weather in {country.capital}</p>
+      </div>
+  )
+}
+
+const ContryInfo = ({country, weather}) => {
+  if(weather === null) 
+    return (<>
+      <CapitalInfo country={country} />
+      <p>Loading weather...</p>
+    </>)
+
+  const scrURL = weather.weather[0].icon
+  console.log(scrURL)
+
+  return (
+    <div>
+      <CapitalInfo country={country} />
+      <p>Zone: {weather.name}</p>
+      <img src={'https://openweathermap.org/img/wn/'+ scrURL + '@2x.png'} alt="Weather icon"/>
+      <p>Temperature: {weather.main.temp} Celsius</p>
+      <p>Wind: {weather.wind.speed} m/s</p>
     </div>
   )
 }
@@ -41,6 +64,8 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('')*/
   const [searchC, setSearchC] = useState('')
   const [countries, setCountries] = useState(null)
+  const [weather, setWeather] = useState(null)
+  const [newContryLoaded, setNewContryLoaded] = useState(false)
 
   /*useEffect(() => {
     console.log('effect running, fetching data: ', countries)
@@ -57,12 +82,50 @@ const App = () => {
     }
   }, [searchC])*/
 
+  const weatherHook = () => {
+    if(searchC === '')
+      return
+
+    const country = countries.find(country => 
+      new RegExp(`\\b${searchC.toLowerCase()}\\b`).test(country.name.common.toLowerCase())
+    );
+
+    if (!country) {
+      console.log('No matching country found');
+      return;
+    }
+    
+    console.log('fetching weather contry ', searchC)
+    openWeatherMap.getWeather(searchC).then(response => {
+      setWeather(response.data) 
+    }).catch(error => {
+      console.log(error.message)
+    })
+    console.log('weather: ', weather)
+  }
+
   useEffect(() => {
     countriesServices.getAll().then(response => {
       setCountries(response.data)
+      //console.log(openWeatherMap.getWeather('Helsinki'))
       //console.log('fetching data: ', countries)
     })
-  }, [countries])
+    console.log("??????")
+  }, [])
+
+  useEffect(() => {
+    
+    if(newContryLoaded === false)
+      return
+
+    const interval = setInterval(() => {
+      weatherHook()
+      setNewContryLoaded(false)
+    }, 3000);
+
+    return () => clearInterval(interval)
+
+  }, [newContryLoaded])
 
   const getAllConsidencies = () => {
     if(countries === null) {
@@ -77,7 +140,7 @@ const App = () => {
     if(countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).length === 1) {
       const country = countries.find(country => country.name.common.toLowerCase().includes(searchC.toLowerCase()))
       return (
-        <ContryInfo country={country} />
+        <ContryInfo country={country} weather={weather} setWeather={setWeather}/>
       )
     }
 
@@ -89,7 +152,7 @@ const App = () => {
         ) : (
 
           countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).map(country => 
-            <CountryRow key={country.name.common} country={country} handleOnClick={setSearchC} />
+            <CountryRow key={country.name.common} country={country} handleOnClick={() => handleInputChangeW(country.name.common)} />
           )
         )
         }
@@ -158,7 +221,15 @@ const App = () => {
   const handleInputChange = ({event, setValueCall}) => {
     if(setValueCall !== null) {
       setValueCall(event.target.value)
+      console.log("button 1 presses: " + event.target.value);
+      weatherHook()
     }
+  }
+
+  const handleInputChangeW = (contryName) => {
+    console.log("button 2 presses: " + contryName);
+    setSearchC(contryName)
+    setNewContryLoaded(true)
   }
 
   /*const NotificationSuccess = ({ message }) => {
