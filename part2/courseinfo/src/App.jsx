@@ -7,6 +7,31 @@ import Persons from './components/Persons'
 import personService from './services/persons'*/
 import countriesServices from './services/countries'
 
+const CountryRow = ({country, handleOnClick}) => {
+  return (
+  <div className='country-row'>
+    <p key={country.name.common}>{country.name.common}</p>
+    <button onClick={() => handleOnClick(country.name.common)}>Show</button>
+  </div>) 
+}
+
+const ContryInfo = ({country}) => {
+  return (
+    <div>
+      <h1>{country.name.common}</h1>
+      <p>Capital: {country.capital}</p>
+      <p>Population: {country.population}</p>
+      <h2>Languages</h2>
+      <ul>
+        {Object.values(country.languages).map(language => 
+          <li key={language}>{language}</li>
+        )}
+      </ul>
+      <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" height="100" />
+    </div>
+  )
+}
+
 const App = () => {
   /*const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -52,31 +77,24 @@ const App = () => {
     if(countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).length === 1) {
       const country = countries.find(country => country.name.common.toLowerCase().includes(searchC.toLowerCase()))
       return (
-        <div>
-          <h1>{country.name.common}</h1>
-          <p>Capital: {country.capital}</p>
-          <p>Population: {country.population}</p>
-          <h2>Languages</h2>
-          <ul>
-            {Object.values(country.languages).map(language => 
-              <li key={language}>{language}</li>
-            )}
-          </ul>
-          <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="100" height="100" />
-        </div>
+        <ContryInfo country={country} />
       )
     }
 
+    //const countriesFiltered = countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase()))
     return (
       <div>
         {countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).length > 10 ? (
           <p>Too many matches, specify another filter</p>
-        ) : ( 
-          countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).map(country =>
-            <p key={country.name.common}>{country.name.common}</p>
+        ) : (
+
+          countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).map(country => 
+            <CountryRow key={country.name.common} country={country} handleOnClick={setSearchC} />
           )
-        )}
-      </div>)
+        )
+        }
+      </div>
+    )
   }
   
   /*const addPhone = (event) => {

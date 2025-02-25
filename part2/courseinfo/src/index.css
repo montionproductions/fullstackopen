@@ -28,3 +28,12 @@ li {
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.country-row {
+    display: flex;
+    align-items: center;
+}
+
+.country-row p {
+    margin-right: 10px; /* Espacio entre el texto y el botón */
+}
