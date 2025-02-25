@@ -64,9 +64,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 const generateId = () => {
-    const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id)) 
-    : 0
+    return Date.now() + Math.random()
 }
 
 app.post('/api/persons', (request, response) => {
@@ -79,10 +77,11 @@ app.post('/api/persons', (request, response) => {
 
     const personsObj = {
         name: body.name,
-        id: generateId()
+        id: generateId(),
+        number: body.number
     }
 
-    personsObj = personsObj.concat(personsObj)
+    phonebook = phonebook.concat(personsObj)
     response.json(personsObj)
 })
 
