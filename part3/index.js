@@ -57,8 +57,9 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    persons = persons.filter(persons => persons.id !== id)
-    
+    const person = phonebook.filter(persons => persons.id !== id)
+    console.log("Remainding person: ", person)
+   
     response.status(204).end()
 })
 
