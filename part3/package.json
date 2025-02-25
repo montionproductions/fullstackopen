@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "First backend part 3 full stack open project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montionproductions/fullstackopen.git"
+  },
+  "author": "Frank Montion",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/montionproductions/fullstackopen/issues"
+  },
+  "homepage": "https://github.com/montionproductions/fullstackopen#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
