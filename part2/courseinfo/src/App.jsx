@@ -1,29 +1,85 @@
 import { useState, useEffect } from 'react'
 
-import Filter from './components/Filter'
+/*import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
-import personService from './services/persons'
+import personService from './services/persons'*/
+import countriesServices from './services/countries'
 
 const App = () => {
-  const [persons, setPersons] = useState([])
+  /*const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSerch, setNewSerch] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')*/
+  const [searchC, setSearchC] = useState('')
+  const [countries, setCountries] = useState(null)
 
-  const hook = () => {
-    //console.log('effect')
-    personService.getAll().then(initialPersons => {
-      setPersons(initialPersons.data)
+  /*useEffect(() => {
+    console.log('effect running, fetching data: ', countries)
+
+    if(searchC !== '') {
+      console.log('fetching countries...')
+      countriesServices.
+        getCountry(searchC).
+          then(response => {
+            console.log('promise fulfilled')
+            setCountries(response.data)
+          })
+      
+    }
+  }, [searchC])*/
+
+  useEffect(() => {
+    countriesServices.getAll().then(response => {
+      setCountries(response.data)
+      //console.log('fetching data: ', countries)
     })
-  }
+  }, [countries])
 
-  useEffect(hook, [])
+  const getAllConsidencies = () => {
+    if(countries === null) {
+      return <p>Loading...</p>
+    }
+
+    // Print first 10 countries
+    /*countries.slice(0, 10).map(country => 
+      console.log(country.name)
+    )*/
+
+    if(countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).length === 1) {
+      const country = countries.find(country => country.name.common.toLowerCase().includes(searchC.toLowerCase()))
+      return (
+        <div>
+          <h1>{country.name.common}</h1>
+          <p>Capital: {country.capital}</p>
+          <p>Population: {country.population}</p>
+          <h2>Languages</h2>
+          <ul>
+            {Object.values(country.languages).map(language => 
+              <li key={language}>{language}</li>
+            )}
+          </ul>
+          <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="100" height="100" />
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        {countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).length > 10 ? (
+          <p>Too many matches, specify another filter</p>
+        ) : ( 
+          countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).map(country =>
+            <p key={country.name.common}>{country.name.common}</p>
+          )
+        )}
+      </div>)
+  }
   
-  const addPhone = (event) => {
+  /*const addPhone = (event) => {
     event.preventDefault()
     const phoneObject = {
       number: newPhone,
@@ -79,13 +135,15 @@ const App = () => {
           console.log(response)
         })
     }
-  }
+  }*/
 
   const handleInputChange = ({event, setValueCall}) => {
-    setValueCall(event.target.value)
+    if(setValueCall !== null) {
+      setValueCall(event.target.value)
+    }
   }
 
-  const NotificationSuccess = ({ message }) => {
+  /*const NotificationSuccess = ({ message }) => {
 
     if (message === "") {
       return
@@ -105,10 +163,22 @@ const App = () => {
     return (
       <p className="error">{message}</p>
     )
-  }
+  }*/
 
   return (
     <div>
+      <form>
+        <p>Find countries</p>
+        <input 
+          value={searchC} 
+          onChange={(event) => handleInputChange({event, setValueCall: setSearchC})} 
+          />
+      </form> 
+      {getAllConsidencies()}     
+    </div> )  
+}
+
+{/*<div>
       <h2>Phonebook </h2>
       <Filter value={newSerch} setValue={setNewSerch} handleInputChange={handleInputChange} persons={persons} /> 
 
@@ -124,8 +194,6 @@ const App = () => {
       
       <h3>Numbers</h3>
       <Persons persons={persons} onDeleteHandle={deletePhone}/>
-    </div>
-  )
-}
+    </div>*/}
 
 export default App
