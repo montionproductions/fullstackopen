@@ -1,0 +1,39 @@
+h2 {
+    color: rgb(4, 5, 97);
+    font-style: bold;
+}
+
+li {
+    color: grey;
+    padding-top: 3px;
+    font-size: 15px;
+}
+
+.success {
+    color: green;
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: red;
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.country-row {
+    display: flex;
+    align-items: center;
+}
+
+.country-row p {
+    margin-right: 10px; /* Espacio entre el texto y el botón */
+}
