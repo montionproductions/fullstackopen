@@ -7,53 +7,8 @@ import Persons from './components/Persons'
 import personService from './services/persons'*/
 import countriesServices from './services/countries'
 import openWeatherMap from './services/openWeatherMap'
-
-const CountryRow = ({country, handleOnClick}) => {
-  return (
-  <div className='country-row'>
-    <p key={country.name.common}>{country.name.common}</p>
-    <button onClick={() => handleOnClick(country.name.common)}>Show</button>
-  </div>) 
-}
-
-const CapitalInfo = ({country}) => {
-  return (
-    <div>
-        <h1>{country.name.common}</h1>
-        <p>Capital: {country.capital}</p>
-        <p>Population: {country.population}</p>
-        <h2>Languages</h2>
-        <ul>
-          {Object.values(country.languages).map(language => 
-            <li key={language}>{language}</li>
-          )}
-        </ul>
-        <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" height="100" />
-        <p>Weather in {country.capital}</p>
-      </div>
-  )
-}
-
-const ContryInfo = ({country, weather}) => {
-  if(weather === null) 
-    return (<>
-      <CapitalInfo country={country} />
-      <p>Loading weather...</p>
-    </>)
-
-  const scrURL = weather.weather[0].icon
-  console.log(scrURL)
-
-  return (
-    <div>
-      <CapitalInfo country={country} />
-      <p>Zone: {weather.name}</p>
-      <img src={'https://openweathermap.org/img/wn/'+ scrURL + '@2x.png'} alt="Weather icon"/>
-      <p>Temperature: {weather.main.temp} Celsius</p>
-      <p>Wind: {weather.wind.speed} m/s</p>
-    </div>
-  )
-}
+import CountryInfo from './components/Country/CountryInfo'
+import CountryRow from './components/Country/CountryRow'
 
 const App = () => {
   /*const [persons, setPersons] = useState([])
@@ -140,7 +95,7 @@ const App = () => {
     if(countries.filter(country => country.name.common.toLowerCase().includes(searchC.toLowerCase())).length === 1) {
       const country = countries.find(country => country.name.common.toLowerCase().includes(searchC.toLowerCase()))
       return (
-        <ContryInfo country={country} weather={weather} setWeather={setWeather}/>
+        <CountryInfo country={country} weather={weather} setWeather={setWeather}/>
       )
     }
 
