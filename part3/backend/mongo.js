@@ -29,12 +29,13 @@ const phonebookSchema = new mongoose.Schema({
 })
 
 const Person = mongoose.model('Person', phonebookSchema)
-
-const generateNumericId = () => {
-    const timestamp = Date.now(); // Obtiene la marca de tiempo actual en milisegundos
-    const randomPart = Math.floor(Math.random() * 1000); // Número aleatorio entre 0 y 999
-    return Number(`${timestamp}${randomPart}`); // Concatena y convierte en número
+phonebookSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
     }
+  })
 
 if (process.argv.length === 5) {
     const person = new Person({
@@ -54,6 +55,7 @@ if (process.argv.length === 5) {
   if (process.argv.length === 3) {
     Person.find({}).then(result => {
         console.log("phonebook")
+        console.log(result.data)
         result.forEach(p => {
           console.log(p.name +" " + p.number)
         })

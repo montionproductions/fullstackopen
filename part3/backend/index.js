@@ -1,6 +1,9 @@
 const express = require('express')
 var morgan = require('morgan')
+require('dotenv').config()
+
 const app = express()
+const Person = require('./models/phonebook')
 
 app.use(express.static('dist'))
 
@@ -14,7 +17,7 @@ morgan.token('body', (req) => {
 });
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let phonebook = [
+/*let phonebook = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -35,10 +38,15 @@ let phonebook = [
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122"
     }
-]
+]*/
 
 app.get('/api/persons/', (request, response) => {
-  response.json(phonebook)
+    //response.json(request)
+    Person.find({}).then(result => {
+            console.log("phonebook")
+            console.log(result)
+            response.json(result)
+          })
 })
 
 app.get('/api/persons/info', (request, response) => {
@@ -55,15 +63,10 @@ app.get('/api/persons/info', (request, response) => {
 
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    console.log(id)
-    const person = phonebook.find(person => person.id === id)
-
-    if(person) {
+    console.log(request.params.id)
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+      })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -74,43 +77,30 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-const generateId = () => {
-    return Date.now() + Math.random()
-}
-
 app.post('/api/persons', (request, response) => {
     const body = request.body
+    console.log(body)
 
-    if(!body.name) {
+    if(body.name === undefined) {
         return response.status(400).json({
             error:'Name is missing'
         })
     }
 
-    if(!body.number) {
+    if(body.number === undefined) {
         return response.status(400).json({
             error:'Number is missing'
         })
     }
 
-    const existingEntry = phonebook.find(entry => entry.name === body.name);
-    if(existingEntry) {
-        return response.status(409).json({
-            error:'Name is currently in the DB'
-        })
-    }
-
-    const personsObj = {
+    const person = new Person({
         name: body.name,
-        id: generateId(),
-        number: body.number
-    }
-
-    phonebook = phonebook.concat(personsObj)
-    response.json(personsObj)
-    morgan('combined', {
-        skip: function (req, res) { return res.statusCode < 400 }
-      })
+        number: body.number,
+    })
+    
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 const PORT = process.env.PORT || 3001
