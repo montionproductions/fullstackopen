@@ -169,7 +169,14 @@ const App = () => {
             setTimeout(() => {
               setSuccessMessage("")
             }, 5000)
-      })
+      }).catch(error => {
+        console.log(error.response.data.error)
+        setErrorMessage(error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage("")
+        }, 5000)
+      }
+    )
   }
 
   const deletePhone = (id) => {
