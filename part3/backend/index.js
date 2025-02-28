@@ -62,46 +62,85 @@ app.get('/api/persons/info', (request, response) => {
 });
 
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     console.log(request.params.id)
-    Person.findById(request.params.id).then(person => {
-        response.json(person)
-      })
+    Person.findById(request.params.id).
+    then(person => {
+        if(person) {
+            response.json(person)
+        } else {
+            response.status(404).end()
+        }  
+    }).catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = phonebook.filter(persons => persons.id !== id)
-    console.log("Remainding person: ", person)
-   
-    response.status(204).end()
+    Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
-    console.log(body)
-
-    if(body.name === undefined) {
-        return response.status(400).json({
-            error:'Name is missing'
-        })
+  
+    const data = {
+      name: body.name,
+      number: body.number,
     }
+  
+    Person.findByIdAndUpdate(request.params.id, data, { new: true })
+      .then(updatedPerson => {
+        response.json(updatedPerson)
+      })
+      .catch(error => next(error))
+  })
 
-    if(body.number === undefined) {
-        return response.status(400).json({
-            error:'Number is missing'
-        })
+app.post('/api/persons', async (request, response, next) => {
+    try {
+        const { name, number } = request.body;
+
+        if (!name) {
+            return response.status(400).json({ error: 'Name is missing' });
+        }
+
+        if (!number) {
+            return response.status(400).json({ error: 'Number is missing' });
+        }
+
+        // Verifica si la persona ya existe
+        const existingPerson = await Person.findOne({ name });
+
+        if (existingPerson) {
+            return response.status(400).json({ error: 'Name must be unique' });
+        }
+
+        // Crea y guarda la nueva persona
+        const person = new Person({ name, number });
+        const savedPerson = await person.save();
+
+        response.json(savedPerson);
+    } catch (error) {
+        console.error('Error in POST /api/persons:', error);
+
+        // Envía solo el mensaje de error en la respuesta
+        next({ message: error.message });
     }
+});
 
-    const person = new Person({
-        name: body.name,
-        number: body.number,
-    })
-    
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
-})
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+  
+// este debe ser el último middleware cargado, ¡también todas las rutas deben ser registrada antes que esto!
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
