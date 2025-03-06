@@ -27,8 +27,29 @@ const favoriteBlog = (blogsList) => {
   }];
 }
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+      return null;
+  }
+
+  const authorCount = {};
+
+  // Contar la cantidad de blogs por autor
+  blogs.forEach(blog => {
+      authorCount[blog.author] = (authorCount[blog.author] || 0) + 1;
+  });
+
+  // Encontrar el autor con más blogs
+  const mostProlificAuthor = Object.entries(authorCount).reduce((max, [author, count]) => {
+      return count > max.blogs ? { author, blogs: count } : max;
+  }, { author: '', blogs: 0 });
+
+  return [mostProlificAuthor];
+};
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
