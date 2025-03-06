@@ -2,11 +2,11 @@ const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 
-describe('Total likes', () => {
+describe('Favorite blog', () => {
     test('of empty list is zero', () => {
         const list = []
-        const result = listHelper.totalLikes(list)
-        assert.strictEqual(result, 0)
+        const result = listHelper.favoriteBlog(list)
+        assert.deepStrictEqual(result, list)
     })
 
     const listWithOneBlog = [
@@ -19,10 +19,18 @@ describe('Total likes', () => {
           __v: 0
         }
       ]
+
+    const resultOk = [
+        {
+            title: "Go To Statement Considered Harmful",
+            author: "Edsger W. Dijkstra",
+            likes: 5
+        }
+    ]
     
-    test('when list has only one blog, equals the likes of that', () => {
-        const result = listHelper.totalLikes(listWithOneBlog)
-        assert.strictEqual(result, 5)
+    test('when list has only one blog, returns simple object', () => {
+        const result = listHelper.favoriteBlog(listWithOneBlog)
+        assert.deepStrictEqual(result, resultOk)
     })
 
 
@@ -56,7 +64,7 @@ describe('Total likes', () => {
             title: "First class tests",
             author: "Robert C. Martin",
             url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-            likes: 10,
+            likes: 12,
             __v: 0
           },
           {
@@ -64,7 +72,7 @@ describe('Total likes', () => {
             title: "TDD harms architecture",
             author: "Robert C. Martin",
             url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-            likes: 0,
+            likes: 2,
             __v: 0
           },
           {
@@ -76,8 +84,17 @@ describe('Total likes', () => {
             __v: 0
           }  
     ]
+
+    const resultOk2 = [
+        {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            likes: 12
+        }
+    ]
     test('of bigger list is calculated right', () => {
-        const result = listHelper.totalLikes(listBlog)
-        assert.strictEqual(result, 36)
+        const result = listHelper.favoriteBlog(listBlog)
+        assert.deepStrictEqual(result, resultOk2)
     })
+
 })
