@@ -47,9 +47,29 @@ const mostBlogs = (blogs) => {
   return [mostProlificAuthor];
 };
 
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+      return [];
+  }
+
+  const likesCount = {};
+
+  blogs.forEach(blog => {
+      likesCount[blog.author] = (likesCount[blog.author] || 0) + blog.likes;
+  });
+
+  const topAuthor = Object.entries(likesCount).reduce((max, [author, likes]) => {
+      return likes > max.likes ? { author, likes } : max;
+  }, { author: '', likes: 0 });
+
+  return [topAuthor];  // Retorna un array con el objeto
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
