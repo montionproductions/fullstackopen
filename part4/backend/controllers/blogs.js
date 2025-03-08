@@ -33,6 +33,7 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+    console.log("delete was call", request.params.id)
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
 })

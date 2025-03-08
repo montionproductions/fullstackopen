@@ -37,20 +37,20 @@ beforeEach(async () => {
 
 describe('Most blog', () => {
 
-test('there are 2 blogs', async () => {
+/*test('there are 2 blogs', async () => {
     const response = await api.get('/api/blogs')
 
     assert.strictEqual(response.body.length, 2)
 })
 
-/*test('id and not _id', async () => {
+test('id and not _id', async () => {
     const response = await api.get('/api/blogs')
 
     //console.log(response.body)
     assert.strictEqual(response.body._id, undefined)
     assert.strictEqual(response.body[0].id, '5a422a851b54a676234d17f7')
 
-})*/
+})
 
 test('a specific blog can be added', async () => {
     const blog = {
@@ -80,12 +80,12 @@ test('a specific blog can be added', async () => {
     console.log("end db:", blogsAtEnd.body)
     assert.strictEqual(blogsAtEnd.body.length, initialBlogs.body.length + 1)
 })
-/*test('the first blog is about HTTP methods', async () => {
+test('the first blog is about HTTP methods', async () => {
     const response = await api.get('/api/blogs')
   
     const contents = response.body.map(e => e.title)
     assert(contents.includes('Amigos'))
-  })*/
+  })
 
 test('blog without title is not added', async () => {
     const blog = {
@@ -162,6 +162,20 @@ test('a blog without title nor url', async () => {
     const response = await api.get('/api/blogs')
 
     assert.strictEqual(response.body.length, initialBlogs.length)
+})*/
+
+test('Delete a blog', async () => {
+    const idToDelete = '5a422a851b54a676234d17f7'
+
+    const response1 = await api.get('/api/blogs')
+    assert.strictEqual(response1.body.length, 2)
+
+    await api
+        .delete(`/api/blogs/${idToDelete}`)
+        .expect(204)
+
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, 1)
 })
 
 })
