@@ -20,11 +20,13 @@ blogsRouter.post('/', async (request, response) => {
     const body = request.body
 
     const blog = new Blog({
-        title: body.name,
+        title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes
     })
+
+    console.log("blog api was call: ", blog)
 
     const savedBlog = await blog.save()
     response.status(201).json(savedBlog)

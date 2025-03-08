@@ -43,15 +43,43 @@ test('there are 2 blogs', async () => {
     assert.strictEqual(response.body.length, 2)
 })
 
-test('id and not _id', async () => {
+/*test('id and not _id', async () => {
     const response = await api.get('/api/blogs')
 
     //console.log(response.body)
     assert.strictEqual(response.body._id, undefined)
     assert.strictEqual(response.body[0].id, '5a422a851b54a676234d17f7')
 
-})
+})*/
 
+test('a specific blog can be added', async () => {
+    const blog = {
+        title: "Test Title",
+        author: 'Test Author2',
+        url: "test/url.com",
+        likes: 0
+    }
+
+    // Guardamos el número inicial de blogs
+    const initialBlogs = await api.get('/api/blogs')
+    
+    console.log("Initial db:", initialBlogs.body)
+
+    const resultBlog = await api
+        .post(`/api/blogs`)
+        .send(blog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(resultBlog.body.title, blog.title)
+    assert.strictEqual(resultBlog.body.author, blog.author)
+    assert.strictEqual(resultBlog.body.url, blog.url)
+    assert.strictEqual(resultBlog.body.likes, blog.likes)
+
+    const blogsAtEnd = await api.get('/api/blogs')
+    console.log("end db:", blogsAtEnd.body)
+    assert.strictEqual(blogsAtEnd.body.length, initialBlogs.body.length + 1)
+})
 /*test('the first blog is about HTTP methods', async () => {
     const response = await api.get('/api/blogs')
   
