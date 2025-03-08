@@ -128,6 +128,25 @@ test('a blog can be deleted', async () => {
     assert(titles.includes('Go To Statement Considered Harmful'))
 })
 
+test('a blog without likes', async () => {
+    const blog = {
+        title: "Title Test 2",
+        author: "Test Author",
+        url: "http:test",
+    }
+
+    const jsonCreated = await api
+        .post('/api/blogs')
+        .send(blog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    console.log("json created:", jsonCreated.body)
+    const response = await api.get('/api/blogs')
+
+    assert.strictEqual(response.body.length, initialBlogs.length + 1)
+})
+
 })
 
 after(async () => {
