@@ -43,6 +43,15 @@ test('there are 2 blogs', async () => {
     assert.strictEqual(response.body.length, 2)
 })
 
+test('id and not _id', async () => {
+    const response = await api.get('/api/blogs')
+
+    //console.log(response.body)
+    assert.strictEqual(response.body._id, undefined)
+    assert.strictEqual(response.body[0].id, '5a422a851b54a676234d17f7')
+
+})
+
 /*test('the first blog is about HTTP methods', async () => {
     const response = await api.get('/api/blogs')
   
