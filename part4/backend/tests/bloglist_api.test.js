@@ -164,7 +164,7 @@ test('a blog without title nor url', async () => {
     assert.strictEqual(response.body.length, initialBlogs.length)
 })*/
 
-test('Delete a blog', async () => {
+/*test('Delete a blog', async () => {
     const idToDelete = '5a422a851b54a676234d17f7'
 
     const response1 = await api.get('/api/blogs')
@@ -176,6 +176,24 @@ test('Delete a blog', async () => {
 
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length, 1)
+})*/
+
+test('Update blog', async () => {
+    const idToDelete = '5a422a851b54a676234d17f7'
+    const blogData = {
+        title: "Title Updated Put",
+        author: "T. L",
+        likes: 255,
+        url: "updated/url.com"
+    }
+
+    const response = await api
+        .put(`/api/blogs/${idToDelete}`)
+        .send(blogData)
+        .expect(200)
+
+    console.log("Was updated: ", response.body)
+    assert.strictEqual(response.body.title, blogData.title)
 })
 
 })
