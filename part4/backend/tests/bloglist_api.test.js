@@ -147,6 +147,23 @@ test('a blog without likes', async () => {
     assert.strictEqual(response.body.length, initialBlogs.length + 1)
 })
 
+test('a blog without title nor url', async () => {
+    const blog = {
+        title: "Title Test 2",
+        author: "Test Author",
+        likes: 69
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(blog)
+        .expect(400)
+
+    const response = await api.get('/api/blogs')
+
+    assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
 })
 
 after(async () => {
