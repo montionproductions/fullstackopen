@@ -1,3 +1,5 @@
+const User = require('../models/user')
+
 const dummy = (blogs) => {
   if (!blogs || blogs.length === 0) {
     return null;
@@ -66,10 +68,16 @@ const mostLikes = (blogs) => {
   return [topAuthor];  // Retorna un array con el objeto
 };
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  mostLikes
+  mostLikes,
+  usersInDb
 }
