@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/bloglist')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({})
@@ -21,18 +19,14 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if(!decodedToken.id) {
-        return response.status(401).json({error: 'token invalid'})
-    }
-    const user = await User.findById(decodedToken.id)
 
+    const user = request.user
     const blog = new Blog({
         title: body.title,
-        author: decodedToken.username,
+        author: user.username,
         url: body.url,
         likes: body.likes,
-        user: decodedToken.id
+        user: user.id
     })
 
     console.log("blog api was call: ", blog)
@@ -47,16 +41,15 @@ blogsRouter.post('/', async (request, response) => {
 blogsRouter.delete('/:id', async (request, response) => {
     console.log("delete was call", request.params.id)
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if(!decodedToken.id) {
-        return response.status(401).json({error: 'token invalid'})
-    }
+    const user = request.user
+    console.log("user", user.id)
 
     const blog = await Blog.findById(request.params.id)
     if(blog === null) {
         return response.status(401).json({error: 'blog is missing'})
     }
-    if ( blog.user.toString() !== decodedToken.id.toString() ) {
+
+    if ( blog.user.toString() !== user.id.toString() ) {
         return response.status(401).json({error: 'user unauthorized to delete blog'})
     }
 
