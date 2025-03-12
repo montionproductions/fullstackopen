@@ -30,8 +30,25 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('authorization');
+  console.log("request middleware:", authorization);
+
+  if (authorization && authorization.startsWith('Bearer ')) {
+    const token = authorization.replace('Bearer ', '');
+    console.log("token:", token);
+    request.token = token;  // Store the token on the request object
+  } else {
+    request.token = null; // Set token to null if not present
+  }
+
+  next(); // Call next() to move to the next middleware or route handler
+}
+
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor
 }
