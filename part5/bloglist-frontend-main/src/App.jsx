@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import Login from './components/Login'
 import loginService from './services/login'
 import BlogCreator from './components/BlogCreator'
+import ErrorHandler from './components/ErrorHandler'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -15,6 +16,8 @@ const App = () => {
   const [url, setUrl] = useState('')
 
   const [blogs, setBlogs] = useState([])
+  const [errorInfo, setErrorInfo] = useState('')
+  const [errorType, setErrorType] = useState('success')
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -31,10 +34,16 @@ const App = () => {
       setUsername('')
       setPassword('')
       console.log("username: ", user)
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorType('success')
+      setErrorInfo('User successfuly logged!')
       setTimeout(() => {
-        setErrorMessage(null)
+        setErrorInfo('')
+      }, 3000)
+    } catch (exception) {
+      setErrorType('error')
+      setErrorInfo('Wrong username or password')
+      setTimeout(() => {
+        setErrorInfo(null)
       }, 5000)
     }
   }
@@ -52,8 +61,18 @@ const App = () => {
       })
       console.log("Blog added: ", response)
       setBlogs((prevBlogs) => [...prevBlogs, response]);
+      setErrorType('success')
+      setErrorInfo('Blog was successfuly created by: ' + user.username)
+      setTimeout(() => {
+        setErrorInfo('')
+      }, 5000)
     } catch (exception) {
-      console.log("erorr", exception)
+      console.log("Blog error: ", exception)
+      setErrorType('error')
+      setErrorInfo('Something was wrong')
+      setTimeout(() => {
+        setErrorInfo('')
+      }, 5000)
     }
   }
 
@@ -75,6 +94,9 @@ const App = () => {
 
   return (
     <div>
+      <ErrorHandler
+        msg={errorInfo}
+        typeError={errorType}/>
       <Login
         username={username}
         password={password}
