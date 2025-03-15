@@ -3,11 +3,16 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Login from './components/Login'
 import loginService from './services/login'
+import BlogCreator from './components/BlogCreator'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const [blogs, setBlogs] = useState([])
 
@@ -31,6 +36,24 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+    }
+  }
+
+  const handleLogout = () => {
+    window.localStorage.clear()
+    setUser(null)
+  }
+
+  const handleAddBlog = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await blogService.create({
+        title, author, url
+      })
+      console.log("Blog added: ", response)
+      setBlogs((prevBlogs) => [...prevBlogs, response]);
+    } catch (exception) {
+      console.log("erorr", exception)
     }
   }
 
@@ -59,9 +82,19 @@ const App = () => {
         setPassword={setPassword}
         inputHandle={handleLogin}
         user={user}
+        handleLogout={handleLogout}
       />
       {user !== null ? (
       <>
+        <BlogCreator
+          title={title}
+          author={author}
+          url={url}
+          setTitle={setTitle}
+          setAuthor={setAuthor}
+          setUrl={setUrl}
+          inputHandle={handleAddBlog}
+        />
         <h2>blogs</h2>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />

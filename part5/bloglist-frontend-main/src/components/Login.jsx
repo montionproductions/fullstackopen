@@ -1,9 +1,5 @@
 const Login = (loginProps) => {
-    const {username, password, setPassword, setUsername, inputHandle, user} = loginProps
-    
-    const handleLogout = () => {
-        window.localStorage.clear()
-    }
+    const {username, password, setPassword, setUsername, inputHandle, user, handleLogout} = loginProps
 
     const logged = () => (
         <>
