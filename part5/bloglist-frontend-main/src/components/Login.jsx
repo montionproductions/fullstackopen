@@ -1,9 +1,16 @@
 const Login = (loginProps) => {
     const {username, password, setPassword, setUsername, inputHandle, user} = loginProps
     
+    const handleLogout = () => {
+        window.localStorage.clear()
+    }
+
     const logged = () => (
         <>
         <h1>{user.username} logged-in</h1>
+        <button onClick={handleLogout}>
+            logout
+        </button>
         </>
     )
 
