@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
 import Login from './components/Login'
+import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogCreator from './components/BlogCreator'
 import ErrorHandler from './components/ErrorHandler'
@@ -10,10 +10,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const [blogs, setBlogs] = useState([])
   const [errorInfo, setErrorInfo] = useState('')
@@ -53,30 +49,6 @@ const App = () => {
     setUser(null)
   }
 
-  const handleAddBlog = async (event) => {
-    event.preventDefault()
-    //console.log("asdasdasdasd: ")
-    try {
-      const response = await blogService.create({
-        title, author, url
-      })
-      console.log("Blog added: ", response)
-      setBlogs((prevBlogs) => [...prevBlogs, response]);
-      setErrorType('success')
-      setErrorInfo('Blog was successfuly created by: ' + user.username)
-      setTimeout(() => {
-        setErrorInfo('')
-      }, 5000)
-    } catch (exception) {
-      console.log("Blog error: ", exception)
-      setErrorType('error')
-      setErrorInfo('Something was wrong')
-      setTimeout(() => {
-        setErrorInfo('')
-      }, 5000)
-    }
-  }
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
@@ -110,14 +82,10 @@ const App = () => {
       {user !== null ? (
       <>
         <BlogCreator
-          title={title}
-          author={author}
-          url={url}
-          setTitle={setTitle}
-          setAuthor={setAuthor}
-          setUrl={setUrl}
-          inputHandle={handleAddBlog}
-        />
+          setBlogs={setBlogs}
+          setErrorType={setErrorType}
+          setErrorInfo={setErrorInfo}
+          user={user}/>
         <h2>Blogs</h2>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />

@@ -24,7 +24,7 @@ const LoginForm = (props) => {
               onChange={({ target }) => props.setPassword(target.value)}
             />
           </div>
-          <button type="submit" onClick={() => props.setLoginVisible(false)}>
+          <button type="submit">
             login
           </button>
         </form>
@@ -41,10 +41,11 @@ const Login = (props) => {
     setUsername,
     inputHandle,
     user,
-    setLoginVisible,
+
     handleLogout,
   } = props;
 
+  
   const logoutButton = () => {
     return (
       <>
@@ -63,7 +64,7 @@ const Login = (props) => {
           setUsername={setUsername} // corrected prop names
           setPassword={setPassword} // corrected prop names
           inputHandle={inputHandle} // corrected prop names
-          setLoginVisible={setLoginVisible} // added setLoginVisible prop
+          
         />
       </Togglable>
     );

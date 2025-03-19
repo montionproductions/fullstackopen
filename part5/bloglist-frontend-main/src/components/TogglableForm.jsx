@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Togglable = (props) => {
+const TogglableForm = (props) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -9,6 +9,18 @@ const Togglable = (props) => {
   const toggleVisibility = () => {
     setVisible(!visible)
   }
+  
+  const handleFormSubmit = (event) => {
+    props.onFormSubmit(event);
+    setVisible(false);
+  };
+
+  const childrenWithProps = React.Children.map(props.children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { inputHandle: handleFormSubmit });
+    }
+    return child;
+  });
 
   return (
     <div>
@@ -16,11 +28,11 @@ const Togglable = (props) => {
         <button onClick={toggleVisibility}>{props.buttonLabel}</button>
       </div>
       <div style={showWhenVisible}>
-        {props.children}
+        {childrenWithProps}
         <button onClick={toggleVisibility}>cancel</button>
       </div>
     </div>
   )
 }
 
-export default Togglable
+export default TogglableForm

@@ -1,7 +1,16 @@
-import Togglable from "./Togglable"
+import { useState } from "react"
+import TogglableForm from "./TogglableForm"
+import blogService from "../services/blogs"
 
 const BlogForm = (props) => {
-    const { title, author, url, setTitle, setAuthor, setUrl, inputHandle } = props
+    const { 
+        title, 
+        author, 
+        url, 
+        setTitle, 
+        setAuthor, 
+        setUrl, 
+        inputHandle} = props
 
     return (
     <>
@@ -38,20 +47,58 @@ const BlogForm = (props) => {
 }
 
 const BlogCreator = (props) => {
-   
+
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const handleAddBlog = async (event) => {
+        event.preventDefault()
+        
+        try {
+          const response = await blogService.create({
+            title, author, url
+          })
+          console.log("Blog added: ", response)
+          props.setBlogs((prevBlogs) => [...prevBlogs, response]);
+          props.setErrorType('success')
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+          props.setErrorInfo('Blog was successfuly created by: ' + props.user.username)
+          setTimeout(() => {
+            props.setErrorInfo('')
+          }, 5000)
+        } catch (exception) {
+          console.log("Blog error: ", exception)
+          props.setErrorType('error')
+          props.setErrorInfo('Something was wrong')
+          setTimeout(() => {
+            props.setErrorInfo('')
+          }, 5000)
+        }
+    }
+    
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        handleAddBlog(event)
+    };
+
+    
     return (
         <>
-        <Togglable buttonLabel="new blog">
-            <BlogForm 
-                title={props.title} 
-                author={props.author}
-                url={props.url}
-                setTitle={props.setTitle}
-                setAuthor={props.setAuthor}
-                setUrl={props.setUrl}
-                inputHandle={props.inputHandle}/>
-        </Togglable>
+        <TogglableForm buttonLabel="new blog" onFormSubmit={handleSubmit}>
+            <BlogForm
+                title={title}
+                author={author}
+                url={url}
+                setTitle={setTitle}
+                setAuthor={setAuthor}
+                setUrl={setUrl}
+            />
+        </TogglableForm>
         </>
     )
+  
 }
 export default BlogCreator
