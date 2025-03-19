@@ -55,6 +55,7 @@ const App = () => {
 
   const handleAddBlog = async (event) => {
     event.preventDefault()
+    //console.log("asdasdasdasd: ")
     try {
       const response = await blogService.create({
         title, author, url
@@ -103,8 +104,8 @@ const App = () => {
         setUsername={setUsername}
         setPassword={setPassword}
         inputHandle={handleLogin}
-        user={user}
         handleLogout={handleLogout}
+        user={user}
       />
       {user !== null ? (
       <>
@@ -117,7 +118,7 @@ const App = () => {
           setUrl={setUrl}
           inputHandle={handleAddBlog}
         />
-        <h2>blogs</h2>
+        <h2>Blogs</h2>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}

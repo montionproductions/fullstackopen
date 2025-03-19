@@ -1,7 +1,10 @@
-const BlogCreator = ({ title, author, url, setTitle, setAuthor, setUrl, inputHandle }) => {
+import Togglable from "./Togglable"
+
+const BlogForm = (props) => {
+    const { title, author, url, setTitle, setAuthor, setUrl, inputHandle } = props
 
     return (
-        <>
+    <>
         <h1>Add blog</h1>
             <form onSubmit={inputHandle}>
                 <div>title
@@ -30,6 +33,24 @@ const BlogCreator = ({ title, author, url, setTitle, setAuthor, setUrl, inputHan
                 </div>
                 <button type="submit">create</button>
             </form>
+    </>
+    )
+}
+
+const BlogCreator = (props) => {
+   
+    return (
+        <>
+        <Togglable buttonLabel="new blog">
+            <BlogForm 
+                title={props.title} 
+                author={props.author}
+                url={props.url}
+                setTitle={props.setTitle}
+                setAuthor={props.setAuthor}
+                setUrl={props.setUrl}
+                inputHandle={props.inputHandle}/>
+        </Togglable>
         </>
     )
 }
