@@ -1,6 +1,7 @@
 import { useState } from "react"
+import blogService from "../services/blogs"
 
-const Blog = ({blog}) => {
+const Blog = ({blog, user}) => {
   const [showAll, setShowAll] = useState(false)
   const [buttonText, setButtonText] = useState('view')
 
@@ -8,6 +9,25 @@ const Blog = ({blog}) => {
     event.preventDefault()
     setShowAll(!showAll)
     setButtonText(!showAll ? 'hide' : 'view')
+  }
+
+  const handleLikeButton = async () => {
+    //event.preventDefault()
+    const {id, title, author, url, likes} = blog
+    console.log("handleLike, ", id, user.username, user.token)
+        try {
+          const updatedBlog = {
+            title,
+            author,
+            url,
+            likes: likes + 1, // Actualizar solo los likes
+          };
+          
+          const response = await blogService.updateLikes(id, updatedBlog, user.token)
+          console.log(response)
+        } catch (exception) {
+          console.log(exception)
+        }
   }
 
   const blogStyle = {
@@ -26,7 +46,7 @@ const Blog = ({blog}) => {
       {showAll && (
         <div>
           <p>Likes: {blog.likes}</p>
-          <p>Url: {blog.url}<button>like</button></p>
+          <p>Url: {blog.url}<button onClick={handleLikeButton}>like</button></p>
           <p>Author: {blog.author}</p>
         </div>
       )}

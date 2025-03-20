@@ -63,7 +63,7 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [user])
+  }, [user, blogs])
 
   return (
     <div>
@@ -88,7 +88,7 @@ const App = () => {
           user={user}/>
         <h2>Blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} user={user}/>
         )}
       </>) : <></>}
       
