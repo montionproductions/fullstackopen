@@ -15,6 +15,8 @@ const App = () => {
   const [errorInfo, setErrorInfo] = useState('')
   const [errorType, setErrorType] = useState('success')
 
+  const [blogsUpdated, setBlogsUpdated] = useState(false)
+
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log("handleLogin, ", username, password)
@@ -63,7 +65,17 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [user, blogs])
+  }, [user])
+
+  useEffect(() => {
+    if(blogsUpdated) {
+      console.log('updated!!!!')
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs )
+      ) 
+    }
+    setBlogsUpdated(false)
+  }, [blogsUpdated])
 
   return (
     <div>
@@ -87,8 +99,15 @@ const App = () => {
           setErrorInfo={setErrorInfo}
           user={user}/>
         <h2>Blogs</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user}/>
+        {
+          [...blogs]
+          .sort((a, b) => b.likes - a.likes)
+          .map(blog =>
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            user={user}
+            setBlogsUpdated={setBlogsUpdated}/>
         )}
       </>) : <></>}
       

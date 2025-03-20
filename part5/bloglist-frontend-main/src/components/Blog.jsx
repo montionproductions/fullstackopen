@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import blogService from "../services/blogs"
 
-const Blog = ({blog, user}) => {
+const Blog = ({blog, user, setBlogsUpdated}) => {
   const [showAll, setShowAll] = useState(false)
   const [buttonText, setButtonText] = useState('view')
 
@@ -25,9 +25,26 @@ const Blog = ({blog, user}) => {
           
           const response = await blogService.updateLikes(id, updatedBlog, user.token)
           console.log(response)
+          setBlogsUpdated(true)
         } catch (exception) {
           console.log(exception)
         }
+  }
+
+  const hookRemove = async () => {
+    try {     
+      const response = await blogService.remove(blog.id, user.token)
+      //console.log(response)
+      setBlogsUpdated(true)
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
+
+  const handleRemove = () => {
+    if (window.confirm("Do you really want remove this?")) {
+      hookRemove()
+    }
   }
 
   const blogStyle = {
@@ -48,6 +65,8 @@ const Blog = ({blog, user}) => {
           <p>Likes: {blog.likes}</p>
           <p>Url: {blog.url}<button onClick={handleLikeButton}>like</button></p>
           <p>Author: {blog.author}</p>
+          {blog.author === user.username ? 
+            <button onClick={handleRemove}>remove</button> : <></>}
         </div>
       )}
     </div>  

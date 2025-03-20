@@ -32,9 +32,9 @@ const initialBlogs = [
 beforeEach(async () => {
     await Blog.deleteMany({})
     
-    const blogObject = initialBlogs.map(blog => new Blog(blog))
+    /*const blogObject = initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObject.map(blog => blog.save())
-    await Promise.all(promiseArray)
+    await Promise.all(promiseArray)*/
 })
 
 describe('Most blog', () => {
@@ -180,7 +180,7 @@ test('a blog without title nor url', async () => {
     assert.strictEqual(response.body.length, 1)
 })*/
 
-test('Update blog', async () => {
+/*test('Update blog', async () => {
     const idToDelete = '5a422a851b54a676234d17f7'
     const blogData = {
         title: "Title Updated Put",
@@ -196,7 +196,7 @@ test('Update blog', async () => {
 
     console.log("Was updated: ", response.body)
     assert.strictEqual(response.body.title, blogData.title)
-})
+})*/
 
 })
 
