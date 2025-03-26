@@ -22,6 +22,7 @@ const BlogForm = (props) => {
                     value={title}
                     name="title"
                     onChange={({target}) => setTitle(target.value)}
+                    placeholder="title"
                     />
                 </div>
                 <div>author
@@ -30,6 +31,7 @@ const BlogForm = (props) => {
                     value={author}
                     name="author"
                     onChange={({target}) => setAuthor(target.value)}
+                    placeholder="author"
                     />
                 </div>
                 <div>url
@@ -38,6 +40,7 @@ const BlogForm = (props) => {
                     value={url}
                     name="url"
                     onChange={({target}) => setUrl(target.value)}
+                    placeholder="url"
                     />
                 </div>
                 <button type="submit">create</button>
@@ -82,6 +85,9 @@ const BlogCreator = (props) => {
     const handleSubmit = (event) => {
         event.preventDefault()
         handleAddBlog(event)
+        if(props.onFormSubmit) {
+            props.onFormSubmit()   
+        }
     };
 
     
@@ -95,6 +101,7 @@ const BlogCreator = (props) => {
                 setTitle={setTitle}
                 setAuthor={setAuthor}
                 setUrl={setUrl}
+                inputHandle={props.onFormSubmit}
             />
         </TogglableForm>
         </>
