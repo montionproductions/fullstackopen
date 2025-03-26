@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import blogService from "../services/blogs"
 
-const Blog = ({blog, user, setBlogsUpdated}) => {
+const Blog = ({blog, user, onLike, setBlogsUpdated}) => {
   const [showAll, setShowAll] = useState(false)
   const [buttonText, setButtonText] = useState('view')
 
@@ -25,6 +25,9 @@ const Blog = ({blog, user, setBlogsUpdated}) => {
           
           const response = await blogService.updateLikes(id, updatedBlog, user.token)
           console.log(response)
+          if(onLike) {
+            onLike()
+          }
           setBlogsUpdated(true)
         } catch (exception) {
           console.log(exception)

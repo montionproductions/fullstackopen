@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
-import { describe, expect } from 'vitest'
+import { describe, expect, vi } from 'vitest'
 
 describe('blog tests', () => {
     const blog = {
@@ -32,9 +32,33 @@ describe('blog tests', () => {
         const viewButton = screen.getByText("view");
         await user.click(viewButton);
 
-        screen.debug();
+        //screen.debug();
         expect(screen.getByText("Likes: 69")).toBeDefined();
         expect(screen.getByText("Url: test.com")).toBeDefined();
+    });
+
+    it("calls event handler twice when like button is clicked twice", async () => {
+        const mockLikeHandler = vi.fn(); // Creamos un mock de la función
+
+        render(<Blog blog={blog} user={userObj} onLike={mockLikeHandler} />);
+        
+        const user = userEvent.setup();
+
+        // Clic en "view" para mostrar el botón "like"
+        const viewButton = screen.getByText("view");
+        await user.click(viewButton);
+
+        //screen.debug()
+
+        // Ahora buscamos el botón "like" y lo presionamos dos veces
+        const likeButton = screen.getByRole("button", { name: /like/i });
+        await user.click(likeButton);
+        await user.click(likeButton);
+
+        screen.debug()
+
+        // Verificamos que la función mock fue llamada dos veces
+        expect(mockLikeHandler).toHaveBeenCalledTimes(2);
     });
 
 })
