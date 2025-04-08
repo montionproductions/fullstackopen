@@ -1,0 +1,24 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "Testing app with Playwright",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montionproductions/fullstackopen.git"
+  },
+  "author": "Francisco Montion",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/montionproductions/fullstackopen/issues"
+  },
+  "homepage": "https://github.com/montionproductions/fullstackopen#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22.14.0"
+  }
+}

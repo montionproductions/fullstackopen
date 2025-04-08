@@ -18,6 +18,7 @@ const BlogForm = (props) => {
             <form onSubmit={inputHandle}>
                 <div>title
                     <input
+                    data-testid='title'
                     type="text"
                     value={title}
                     name="title"
@@ -27,6 +28,7 @@ const BlogForm = (props) => {
                 </div>
                 <div>author
                     <input
+                    data-testid='author'
                     type="text"
                     value={author}
                     name="author"
@@ -36,6 +38,7 @@ const BlogForm = (props) => {
                 </div>
                 <div>url
                     <input
+                    data-testid='url'
                     type="text"
                     value={url}
                     name="url"
